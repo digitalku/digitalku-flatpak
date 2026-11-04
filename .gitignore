@@ -1,0 +1,6 @@
+# The published tree: the OSTree repository and the files beside it. It is
+# state, not source — its copy of record is the bucket (README.md §4).
+/public/
+
+# Test keys, test installations, anything a prototype run leaves.
+/scratch/
