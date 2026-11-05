@@ -24,25 +24,47 @@ Last worked on 2026-11-05, in two sessions. Read this, then README.md.
   site carries `max-age=300`) and the URL Rewrite *flatpak index*
   (`/` answers 200).
 
-Every commit published in the tests had the same tree. The update path is
-proven, but the size of a delta for a real code change has not been measured.
+- **The first real publish**, 2026-11-05: Roost 0.2.0 (`v0.2.0` in the Roost
+  repository) on `app/com.digitalku.roost/x86_64/stable`, 2,948 objects and
+  163 MB in the bucket, matching the local tree. An empty installation
+  installed it from `https://flatpak.digitalku.com/com.digitalku.roost.flatpakref`
+  in 15 s, with `gpg-verify` and `gpg-verify-summary` on. The objects carry
+  `immutable` for a year and a second `GET` is a `HIT`; the summary and refs
+  are `no-cache`.
+
+Every commit published in the tests had the same tree, so the size of a delta
+for a real code change is still unmeasured. Roost 0.3.0 will be the first.
+
+**Signing.** The pinentry window a background process opens can time out
+unseen. Before `init.sh` or `publish.sh`, prime the agent from your own
+terminal, which keeps the passphrase for ten minutes:
+
+```sh
+echo test | gpg --local-user 61A0073CA3B4489283A0748371819AAD7FCB1E2F --clearsign > /dev/null && echo OK
+```
 
 ## Next, in order
 
 The remote's name, address and branch are confirmed, and there is no
 collection id (README §2).
 
-1. **The first real publish** (README §4, "The first real publish"), from a
-   release build of Roost.
-2. **Roost's side.**
+1. **Roost's side.**
    - Amend ADR-0063 §10, which still says a bundle on GitHub Releases.
    - Decide whether Roost's release build passes `--default-branch=stable`, or
      keeps building `master` and lets `publish.sh` rename it as it does now.
-   - Replace the install instructions on roost.digitalku.com.
+   - Replace the install instructions on roost.digitalku.com and in Roost's
+     README.
+   - Move the owner's own install off `roost-origin` (0.1.0, `master`):
+     uninstall, then install from the `.flatpakref`.
+2. **The next release**: build it, `publish.sh`, `upload.sh`, and measure the
+   delta an installed 0.2.0 pulls.
 
 ## Leftovers safe to delete
 
 `scratch/` (test keys, the moto venv, the isolated `FLATPAK_USER_DIR`s, a
-pulled copy) and `public/` (the test repository). Neither is in git.
+pulled copy, upload logs). Not in git.
+
+**`public/` is now the real repository.** It is not in git either, and it is
+never rebuilt: lose it and `scripts/pull.sh` brings it back from the bucket.
 
 The repository is at git@github.com:digitalku/digitalku-flatpak.git. Commit messages carry no AI co-author or attribution line.
