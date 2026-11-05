@@ -1,6 +1,7 @@
 # Where this stands
 
-Last worked on 2026-11-05, in two sessions. Read this, then README.md.
+Last worked on 2026-11-06. Read this, then README.md. A release follows
+RELEASING.md.
 
 ## Done
 

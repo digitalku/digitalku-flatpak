@@ -4,3 +4,6 @@
 
 # Test keys, test installations, anything a prototype run leaves.
 /scratch/
+
+# Local working notes for an assistant, kept out of git as in Roost.
+/CLAUDE.md

@@ -18,7 +18,9 @@ home. Runtimes still come from Flathub, through `RuntimeRepo=` in each
 | `remote.conf` | The remote's name, URL, branch, descriptive fields and signing key |
 | `apps/<app-id>.conf` | One file per published application: the fields of its `.flatpakref` |
 | `scripts/` | `init.sh`, `publish.sh`, `refs.sh`, `upload.sh`, `pull.sh`; `serve.sh` and `test-key.sh` for local tests; `lib.sh` is shared |
-| `keys/` | The public half of the signing key, once it exists, and how to make it ([keys/README.md](keys/README.md)) |
+| `keys/` | The public half of the signing key, and how it was made ([keys/README.md](keys/README.md)) |
+| `RELEASING.md` | A release, step by step, from the version number to the update in Discover |
+| `CLAUDE.md` | **Not in git**, as in Roost. The rules for an assistant working here |
 | `site/` | The landing page and the icons, uploaded to the bucket's root beside the repository |
 | `public/` | **Not in git.** What is served: `repo/` (OSTree, `archive-z2`), `digitalku.flatpakrepo`, one `<app-id>.flatpakref` per application |
 | `scratch/` | **Not in git.** Test keys, test installations |
@@ -53,9 +55,12 @@ https://flatpak.digitalku.com/com.digitalku.roost.flatpakref
 
 ## 3. Publishing a release
 
+[RELEASING.md](RELEASING.md) is the whole sequence. This section is what
+`publish.sh` itself does.
+
 Build the application with `flatpak-builder --repo=<dir>`. For Roost that is
-`packaging/flatpak/build-local.sh`, which leaves its repository at
-`scratch/flatpak/repo`. Then:
+`packaging/flatpak/build-release.sh`, which builds a tagged release into
+`scratch/flatpak/repo` and installs nothing. Then:
 
 ```sh
 scripts/publish.sh com.digitalku.roost ../roost/scratch/flatpak/repo
