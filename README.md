@@ -115,11 +115,17 @@ onto a stale copy makes a commit whose parent is not the remote's latest.
    `no-cache` ones are revalidated with R2 on every request, and the site
    lives five minutes. Without the Browser TTL setting, the zone's own
    default (six months on digitalku.com) replaced the site's five minutes,
-   which the first test upload found.
-4. A URL Rewrite Rule (Rules → Transform Rules), because R2 has no index
-   document: when `(http.host eq "flatpak.digitalku.com" and
-   http.request.uri.path eq "/")`, rewrite the path statically to
-   `/index.html`. Without it, `https://flatpak.digitalku.com/` is a 404.
+   which the first test upload found. Check it with a `GET`
+   (`curl -s -o /dev/null -D - URL`): a `HEAD` from `curl -I` reports
+   `cf-cache-status: DYNAMIC` whatever the rule says, and a second `GET`
+   should report `HIT`.
+4. A URL Rewrite Rule (Rules → Overview → Create rule → URL Rewrite Rule),
+   because R2 has no index document: when `(http.host eq
+   "flatpak.digitalku.com" and http.request.uri.path eq "/")`, rewrite the
+   **path** statically to `index.html` (the field supplies the leading `/`)
+   and **preserve** the query. Rewriting the query instead is the easy
+   mistake, and the dashboard's list then says *Rewrite query to*. Without
+   the rule, `https://flatpak.digitalku.com/` is a 404.
 5. R2 → Manage API tokens → a token with **Object Read & Write** on that
    bucket only. Then `aws configure --profile digitalku-r2`, with the
    token's access key and secret and region `auto`. The secret stays in
@@ -216,7 +222,6 @@ in the Roost repository. When the brand changes there, copy them again.
 
 ## 7. Not done yet
 
-- The bucket, its custom domain, its Cache Rule and an API token (owner; §4).
-  `R2_ENDPOINT` in `remote.conf` is empty until then.
+- The first real publish (§4).
 - Roost's ADR-0063 §10 still says the Flatpak ships as a bundle on GitHub
   Releases.

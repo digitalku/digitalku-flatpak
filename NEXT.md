@@ -18,6 +18,11 @@ Last worked on 2026-11-05, in two sessions. Read this, then README.md.
   (`keys/README.md`). It signed a test repository from `~/.gnupg`, holding the
   subkey alone, and Flatpak installed Roost from it after verifying against
   `keys/digitalku.asc`, with nothing else trusted.
+- Cloudflare, done by the owner on 2026-11-05: the bucket `digitalku-flatpak`
+  on `flatpak.digitalku.com`, the `digitalku-r2` profile, `site/` uploaded,
+  the Cache Rule *Flatpak respect origin* (a second `GET` is a `HIT`, the
+  site carries `max-age=300`) and the URL Rewrite *flatpak index*
+  (`/` answers 200).
 
 Every commit published in the tests had the same tree. The update path is
 proven, but the size of a delta for a real code change has not been measured.
@@ -27,14 +32,9 @@ proven, but the size of a delta for a real code change has not been measured.
 The remote's name, address and branch are confirmed, and there is no
 collection id (README §2).
 
-1. **Owner: two rules in the Cloudflare dashboard** (README §4, steps 3
-   and 4): the Cache Rule for the whole host with Browser TTL respecting the
-   origin, and the rewrite of `/` to `/index.html`. The bucket, its domain,
-   the token and the `digitalku-r2` profile are done, and `site/` is
-   already in the bucket.
-2. **The first real publish** (README §4, "The first real publish"), from a
+1. **The first real publish** (README §4, "The first real publish"), from a
    release build of Roost.
-3. **Roost's side.**
+2. **Roost's side.**
    - Amend ADR-0063 §10, which still says a bundle on GitHub Releases.
    - Decide whether Roost's release build passes `--default-branch=stable`, or
      keeps building `master` and lets `publish.sh` rename it as it does now.
