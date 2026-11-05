@@ -7,8 +7,8 @@ set -eu
 . "$(dirname "$0")/lib.sh"
 
 require_key
-key=$(gpg_cmd --export "$GPG_KEY_ID" | base64 -w0)
-[ -n "$key" ] || die "gpg exported nothing for $GPG_KEY_ID"
+key=$(embedded_key)
+[ -n "$key" ] || die "no public key: neither $PUBLIC_KEY nor the keyring has $GPG_KEY_ID"
 mkdir -p "$PUBLIC"
 
 cat >"$PUBLIC/$REMOTE_NAME.flatpakrepo" <<EOF

@@ -12,6 +12,16 @@ BASE_URL=${BASE_URL%/}
 BRANCH=${DKF_BRANCH:-$BRANCH}
 GPG_KEY_ID=${DKF_GPG_KEY_ID:-$GPG_KEY_ID}
 GPG_HOMEDIR=${DKF_GPG_HOMEDIR:-$GPG_HOMEDIR}
+R2_BUCKET=${DKF_R2_BUCKET:-$R2_BUCKET}
+R2_ENDPOINT=${DKF_R2_ENDPOINT:-$R2_ENDPOINT}
+# Without the colon: an empty DKF_AWS_PROFILE means no profile at all, and the
+# AWS CLI's own environment variables are used instead.
+AWS_PROFILE_NAME=${DKF_AWS_PROFILE-$AWS_PROFILE_NAME}
+
+# The public half of the signing key, in the repository once it exists. The
+# key embedded in the .flatpakrepo and .flatpakref files is read from it.
+RELEASE_KEY=$ROOT/keys/digitalku.asc
+PUBLIC_KEY=${DKF_PUBLIC_KEY:-$RELEASE_KEY}
 
 PUBLIC=${DKF_PUBLIC:-$ROOT/public}
 REPO=$PUBLIC/repo
@@ -36,6 +46,32 @@ gpg_cmd() {
     gpg --homedir "$GPG_HOMEDIR" "$@"
   else
     gpg "$@"
+  fi
+}
+
+require_bucket() {
+  [ -n "$R2_BUCKET" ] || die "no bucket: set R2_BUCKET in remote.conf or DKF_R2_BUCKET"
+  [ -n "$R2_ENDPOINT" ] || die "no endpoint: set R2_ENDPOINT in remote.conf or DKF_R2_ENDPOINT"
+  command -v aws >/dev/null 2>&1 || die "the AWS CLI (aws) is not installed"
+}
+
+# The S3 API of R2 through the AWS CLI. R2 has one region, `auto`.
+s3() {
+  if [ -n "$AWS_PROFILE_NAME" ]; then
+    aws --profile "$AWS_PROFILE_NAME" --endpoint-url "$R2_ENDPOINT" --region auto s3 "$@"
+  else
+    aws --endpoint-url "$R2_ENDPOINT" --region auto s3 "$@"
+  fi
+}
+
+# The key as a .flatpakrepo carries it: the binary key block, base64. From
+# PUBLIC_KEY when it exists, so the publishing machine needs no more than the
+# secret subkey; from the keyring otherwise.
+embedded_key() {
+  if [ -f "$PUBLIC_KEY" ]; then
+    gpg --dearmor <"$PUBLIC_KEY" | base64 -w0
+  else
+    gpg_cmd --export "$GPG_KEY_ID" | base64 -w0
   fi
 }
 

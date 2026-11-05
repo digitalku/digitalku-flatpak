@@ -17,8 +17,9 @@ home. Runtimes still come from Flathub, through `RuntimeRepo=` in each
 | --- | --- |
 | `remote.conf` | The remote's name, URL, branch, descriptive fields and signing key |
 | `apps/<app-id>.conf` | One file per published application: the fields of its `.flatpakref` |
-| `scripts/` | `init.sh`, `publish.sh`, `refs.sh`, `serve.sh`, `test-key.sh`; `lib.sh` is shared |
-| `keys/` | The public half of the signing key, once it exists ([keys/README.md](keys/README.md)) |
+| `scripts/` | `init.sh`, `publish.sh`, `refs.sh`, `upload.sh`, `pull.sh`; `serve.sh` and `test-key.sh` for local tests; `lib.sh` is shared |
+| `keys/` | The public half of the signing key, once it exists, and how to make it ([keys/README.md](keys/README.md)) |
+| `site/` | Not yet: icons and a landing page, uploaded beside the repository |
 | `public/` | **Not in git.** What is served: `repo/` (OSTree, `archive-z2`), `digitalku.flatpakrepo`, one `<app-id>.flatpakref` per application |
 | `scratch/` | **Not in git.** Test keys, test installations |
 
@@ -65,53 +66,131 @@ scripts/publish.sh com.digitalku.roost ../roost/scratch/flatpak/repo
 commit message. `--force` commits a tree identical to the last one, which is
 for re-signing and never for a release.
 
-## 4. Uploading — not built yet
+## 4. Uploading
 
-The copy of record will be the Cloudflare R2 bucket behind
-`flatpak.digitalku.com`. Two things must hold when that is built:
+`scripts/upload.sh` sends `public/` to the R2 bucket through the AWS CLI. It
+uses R2's S3 API, so no new tool is needed. It deletes nothing, and it goes in
+an order a client cannot see half of:
 
-- **Order.** Upload `objects/` and `deltas/` first, then `refs/`, and
-  `summary`, `summary.sig`, `summary.idx`, `summary.idx.sig`, `summaries/`
-  and `config` **last**. A client that reads a new summary before its objects
-  have arrived fails the update.
-- **Caching.** `summary*`, `summaries/`, `config` and `refs/` are uncached.
-  `objects/` and `deltas/` are immutable, because their names are hashes of
-  their content.
+1. `objects/`, `deltas/`, `delta-indexes/` and `summaries/`. Their names are
+   hashes of their content, so they never change. They are synced (only what
+   the bucket lacks) with `Cache-Control: public, max-age=31536000, immutable`.
+2. `refs/` and `config`, always sent, `no-cache`.
+3. `summary` and `summary.idx`, **last**, each just after its `.sig`. They are
+   `no-cache`.
+4. The `.flatpakrepo` and `.flatpakref` files, `no-cache`, typed
+   `application/vnd.flatpak.repo` and `application/vnd.flatpak.ref` so a
+   browser hands them to the software centre.
+5. `site/`, if it exists: icons and a landing page, `max-age=300`.
 
-`public/` is the working copy the next publish builds on. Keep it, or pull it
-back from the bucket before publishing from another machine.
+It refuses a tree that was written for another address, and once
+`keys/digitalku.asc` exists, a tree carrying any other key. A local test
+cannot be uploaded to the real bucket by mistake. `--dry-run` lists what
+would go.
+
+`build-update-repo` deletes deltas that have been superseded from `public/`,
+and `upload.sh` leaves them in the bucket. They cost a little storage and
+nothing else.
+
+`public/` is the working copy the next publish builds on. On a machine
+without one, or with an older one, run `scripts/pull.sh` first. Publishing
+onto a stale copy makes a commit whose parent is not the remote's latest.
+
+### Setting up the bucket (owner, once)
+
+1. In Cloudflare, create the R2 bucket `digitalku-flatpak`.
+2. Bucket → Settings → Custom Domains → connect `flatpak.digitalku.com`. The
+   `digitalku.com` zone must be on Cloudflare for this. Leave the `r2.dev`
+   address off.
+3. Add a Cache Rule for `flatpak.digitalku.com`: paths starting with
+   `/repo/objects/`, `/repo/deltas/` or `/repo/delta-indexes/` are eligible
+   for cache, honouring the origin's `Cache-Control`. Without it, Cloudflare
+   does not cache extensionless or unfamiliar files at the edge. Everything
+   else is already `no-cache`.
+4. R2 → Manage API tokens → a token with **Object Read & Write** on that
+   bucket only. Then `aws configure --profile digitalku-r2`, with the
+   token's access key and secret and region `auto`. The secret stays in
+   `~/.aws/credentials`.
+5. Set `R2_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com` in
+   `remote.conf`.
+
+### The first real publish
+
+After the key ([keys/README.md](keys/README.md)) and the bucket exist:
+
+```sh
+rm -rf public                         # the test tree; it was never uploaded
+scripts/init.sh
+scripts/publish.sh com.digitalku.roost ../roost/scratch/flatpak/repo
+scripts/upload.sh
+flatpak install --user --from https://flatpak.digitalku.com/com.digitalku.roost.flatpakref
+```
+
+A copy of Roost installed from the GitHub bundle (origin `roost-origin`,
+branch `master`) is not moved onto the remote by any of this. Uninstall it
+and install from the `.flatpakref`. Library data lives outside the
+installation and stays.
 
 ## 5. Trying it locally
 
-Nothing here needs the real key or the bucket:
+None of this needs the real key or the bucket. A test key, and
+[moto](https://github.com/getmoto/moto) in a venv standing in for R2:
 
 ```sh
-scripts/test-key.sh > scratch/env.sh              # a throwaway key in scratch/gnupg
+scripts/test-key.sh > scratch/env.sh          # a throwaway key in scratch/gnupg
+cat >> scratch/env.sh <<'END'
+export DKF_REMOTE_NAME=digitalku-test
+export DKF_BASE_URL=http://127.0.0.1:5055/digitalku-flatpak
+export DKF_R2_ENDPOINT=http://127.0.0.1:5055 DKF_AWS_PROFILE=
+export AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test
+export DKF_ALLOW_TEST_KEY=1
+END
 . scratch/env.sh
-export DKF_BASE_URL=http://127.0.0.1:8080 DKF_REMOTE_NAME=digitalku-test
+
+python3 -m venv scratch/venv && scratch/venv/bin/pip install 'moto[server]'
+scratch/venv/bin/moto_server -H 127.0.0.1 -p 5055 &
+aws --endpoint-url $DKF_R2_ENDPOINT --region auto s3 mb s3://digitalku-flatpak
+aws --endpoint-url $DKF_R2_ENDPOINT --region auto s3api put-bucket-policy \
+  --bucket digitalku-flatpak --policy '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":"*","Action":"s3:GetObject","Resource":"arn:aws:s3:::digitalku-flatpak/*"}]}'
+
 scripts/init.sh
 scripts/publish.sh com.digitalku.roost ../roost/scratch/flatpak/repo
-scripts/serve.sh &                                 # loopback only
+scripts/upload.sh
 
 # A separate user installation, so the machine's own is untouched. It uses the
-# system's runtimes where they are installed.
-export FLATPAK_USER_DIR=$PWD/scratch/flatpak-user
-flatpak --user install --from http://127.0.0.1:8080/com.digitalku.roost.flatpakref
-flatpak --user update
+# system's runtimes where they are installed. Export it only for flatpak
+# itself: the scripts run ostree from the org.flatpak.Builder installed in the
+# real one.
+FLATPAK_USER_DIR=$PWD/scratch/flatpak-user \
+  flatpak --user install --from $DKF_BASE_URL/com.digitalku.roost.flatpakref
 ```
 
-The prototype on 2026-11-05 ran exactly this. It installed Roost from the remote
-with signature checking on, published a second commit that installed copies
-updated to through a static delta, and found that a summary signed by any other
-key is refused.
+`scripts/serve.sh` serves `public/` directly, without a bucket, for a test of
+the repository alone.
+
+What the prototype has shown so far:
+
+- **2026-11-05, from `public/` served directly.** Roost installed from its
+  `.flatpakref` with signature checking on. A second commit reached the
+  installed copy as an update through a static delta. A summary signed by
+  another key was refused.
+- **2026-11-05, through the bucket.** Uploaded to moto, Roost installed from
+  the bucket. `pull.sh` then brought it into an empty `public/`, a third
+  commit was published onto that copy, and the installed copy updated to it,
+  with the second commit as its parent. `upload.sh` refused a tree with a
+  stale URL, and a test key without `DKF_ALLOW_TEST_KEY`. A keyring holding
+  only the signing subkey signed a summary that verified against the public
+  block.
 
 ## 6. Not done yet
 
-- The real signing key ([keys/README.md](keys/README.md)). `GPG_KEY_ID` in
-  `remote.conf` is empty until it exists.
-- The upload to R2 and the bucket's cache rules (§4).
-- The icons the `.flatpakrepo` and `.flatpakref` point at (`digitalku.svg`,
-  `icons/com.digitalku.roost.png`), and a landing page at the root.
+- The real signing key (owner; [keys/README.md](keys/README.md)).
+  `GPG_KEY_ID` in `remote.conf` is empty until it exists.
+- The bucket, its custom domain, its Cache Rule and an API token (owner; §4).
+  `R2_ENDPOINT` in `remote.conf` is empty until then.
+- `site/`: the icons the `.flatpakrepo` and `.flatpakref` point at
+  (`digitalku.svg`, `icons/com.digitalku.roost.png`), and a landing page at
+  the root.
 - A collection id. Without one, the remote cannot be used for peer-to-peer or
   USB installs. It can be added later, but every installed copy then has to be
   told about it.

@@ -13,4 +13,6 @@ if [ ! -d "$home" ]; then
     --quick-generate-key 'Digitalku Flatpak TEST KEY <test@invalid>' ed25519 sign never >/dev/null 2>&1
 fi
 id=$(gpg --homedir "$home" --list-keys --with-colons 2>/dev/null | awk -F: '$1 == "fpr" { print $10; exit }')
-printf 'export DKF_GPG_HOMEDIR=%s\nexport DKF_GPG_KEY_ID=%s\n' "$home" "$id"
+gpg --homedir "$home" --armor --export "$id" >"$home/test.asc" 2>/dev/null
+printf 'export DKF_GPG_HOMEDIR=%s\nexport DKF_GPG_KEY_ID=%s\nexport DKF_PUBLIC_KEY=%s\n' \
+  "$home" "$id" "$home/test.asc"
