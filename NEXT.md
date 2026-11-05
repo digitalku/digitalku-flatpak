@@ -45,4 +45,4 @@ collection id (README §2).
 `scratch/` (test keys, the moto venv, the isolated `FLATPAK_USER_DIR`s, a
 pulled copy) and `public/` (the test repository). Neither is in git.
 
-The repository has no git remote yet.
+The repository is at git@github.com:digitalku/digitalku-flatpak.git. Commit messages carry no AI co-author or attribution line.
