@@ -42,6 +42,12 @@ https://flatpak.digitalku.com/com.digitalku.roost.flatpakref
   give every installed copy an unrelated history. `init.sh` runs once.
 - **One branch: `stable`.** Whatever branch the build used (`master` by
   default), it is published as `stable`.
+- **Fixed for good on 2026-11-05.** The remote's name `digitalku`, its address
+  `https://flatpak.digitalku.com` and the branch `stable` are written into
+  every installed copy, and none of them can change without each user
+  installing again. The owner confirmed all three before the first release.
+- **No collection id.** It would only serve installs copied over USB or a
+  local network, which nobody has asked for. Decided 2026-11-05.
 - **An application is listed before it is published.** `publish.sh` refuses an
   app id with no `apps/<app-id>.conf`.
 
@@ -207,8 +213,5 @@ in the Roost repository. When the brand changes there, copy them again.
   `GPG_KEY_ID` in `remote.conf` is empty until it exists.
 - The bucket, its custom domain, its Cache Rule and an API token (owner; §4).
   `R2_ENDPOINT` in `remote.conf` is empty until then.
-- A collection id. Without one, the remote cannot be used for peer-to-peer or
-  USB installs. It can be added later, but every installed copy then has to be
-  told about it.
 - Roost's ADR-0063 §10 still says the Flatpak ships as a bundle on GitHub
   Releases.

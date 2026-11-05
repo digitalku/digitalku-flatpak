@@ -23,6 +23,9 @@ proven, but the size of a delta for a real code change has not been measured.
 
 ## Next, in order
 
+The remote's name, address and branch are confirmed, and there is no
+collection id (README §2).
+
 1. **Owner: the real GPG key** (`keys/README.md`, "Making it"). Then commit
    `keys/digitalku.asc` and `GPG_KEY_ID` in `remote.conf`.
 2. **Owner: the bucket** (README §4, "Setting up the bucket"): the bucket,
@@ -36,8 +39,6 @@ proven, but the size of a delta for a real code change has not been measured.
    - Decide whether Roost's release build passes `--default-branch=stable`, or
      keeps building `master` and lets `publish.sh` rename it as it does now.
    - Replace the install instructions on roost.digitalku.com.
-5. **Optional: a collection id**, needed only for USB or peer-to-peer
-   installs. Cheapest before the first real user.
 
 ## Leftovers safe to delete
 
