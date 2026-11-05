@@ -35,6 +35,9 @@ Last worked on 2026-11-05, in two sessions. Read this, then README.md.
 Every commit published in the tests had the same tree, so the size of a delta
 for a real code change is still unmeasured. Roost 0.3.0 will be the first.
 
+The owner's own Roost moved to this remote the same day, in the system
+installation.
+
 **Signing.** The pinentry window a background process opens can time out
 unseen. Before `init.sh` or `publish.sh`, prime the agent from your own
 terminal, which keeps the passphrase for ten minutes:
@@ -54,8 +57,6 @@ collection id (README §2).
      keeps building `master` and lets `publish.sh` rename it as it does now.
    - Replace the install instructions on roost.digitalku.com and in Roost's
      README.
-   - Move the owner's own install off `roost-origin` (0.1.0, `master`):
-     uninstall, then install from the `.flatpakref`.
 2. **The next release**: build it, `publish.sh`, `upload.sh`, and measure the
    delta an installed 0.2.0 pulls.
 
