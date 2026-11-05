@@ -11,6 +11,9 @@ Last worked on 2026-11-05, in two sessions. Read this, then README.md.
 - The whole cycle, tried locally against moto standing in for R2 (README §5):
   publish, upload, install from the bucket, pull into an empty copy, publish
   again, update.
+- `site/`: the landing page and the icons, checked in a browser at desktop
+  and phone width, light and dark, and served from the emulated bucket with
+  the right content types (README §6).
 - The key scheme, tried with throwaway keys: a keyring holding only the
   signing subkey signs, and Flatpak verifies against the public block. The
   steps for the real key are in `keys/README.md`.
@@ -26,16 +29,14 @@ proven, but the size of a delta for a real code change has not been measured.
    the custom domain `flatpak.digitalku.com`, the Cache Rule, an API token,
    and the `digitalku-r2` profile for the AWS CLI. Then set `R2_ENDPOINT` in
    `remote.conf`.
-3. **`site/`**: `digitalku.svg`, `icons/com.digitalku.roost.png`, and an
-   `index.html` linking the `.flatpakrepo` and each `.flatpakref`.
-4. **The first real publish** (README §4, "The first real publish"), from a
+3. **The first real publish** (README §4, "The first real publish"), from a
    release build of Roost.
-5. **Roost's side.**
+4. **Roost's side.**
    - Amend ADR-0063 §10, which still says a bundle on GitHub Releases.
    - Decide whether Roost's release build passes `--default-branch=stable`, or
      keeps building `master` and lets `publish.sh` rename it as it does now.
    - Replace the install instructions on roost.digitalku.com.
-6. **Optional: a collection id**, needed only for USB or peer-to-peer
+5. **Optional: a collection id**, needed only for USB or peer-to-peer
    installs. Cheapest before the first real user.
 
 ## Leftovers safe to delete

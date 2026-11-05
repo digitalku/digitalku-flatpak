@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitalku Flatpak</title>
+<meta name="description" content="Linux applications from Digitalku, installed and kept up to date through Flatpak.">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="digitalku.png" type="image/png">
+<style>
+  :root {
+    --navy: #05396b;
+    --teal: #379583;
+    --bg: #f6f8fa;
+    --surface: #ffffff;
+    --border: #dde3ea;
+    --text: #0f1d2b;
+    --muted: #556372;
+    --accent: var(--navy);
+    --accent-text: #ffffff;
+    --code-bg: #eef2f6;
+    --link: #0b5a9e;
+    --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+    --font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0c141d;
+      --surface: #121d29;
+      --border: #22303f;
+      --text: #e6edf5;
+      --muted: #9aa8b7;
+      --accent: #379583;
+      --accent-text: #ffffff;
+      --code-bg: #0a1018;
+      --link: #6cc5bc;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.6 var(--font-ui);
+  }
+  a { color: var(--link); }
+  main, header, footer { max-width: 760px; margin: 0 auto; padding: 0 16px; }
+
+  header { padding-top: 48px; padding-bottom: 8px; }
+  .logo { display: block; height: 44px; width: auto; }
+  .logo-dark { display: none; }
+  @media (prefers-color-scheme: dark) {
+    .logo-light { display: none; }
+    .logo-dark { display: block; }
+  }
+  h1 {
+    margin: 28px 0 8px;
+    font-size: clamp(28px, 5vw, 40px);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+  .lede { margin: 0; color: var(--muted); font-size: 18px; max-width: 34em; }
+
+  section { margin-top: 48px; }
+  h2 { font-size: 20px; margin: 0 0 12px; }
+  p { margin: 0 0 12px; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .app { display: grid; grid-template-columns: 72px 1fr; gap: 16px 20px; align-items: start; }
+  .app img { width: 72px; height: 72px; }
+  .app h3 { margin: 0; font-size: 20px; }
+  .app .summary { margin: 2px 0 14px; color: var(--muted); }
+  .app .wide { grid-column: 1 / -1; }
+  @media (max-width: 480px) {
+    .app { grid-template-columns: 56px 1fr; }
+    .app img { width: 56px; height: 56px; }
+  }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .button {
+    display: inline-block;
+    padding: 9px 16px;
+    border-radius: 8px;
+    background: var(--accent);
+    color: var(--accent-text);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .button:hover { filter: brightness(1.12); }
+  .button:focus-visible, .copy:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+
+  .command {
+    display: flex;
+    align-items: stretch;
+    margin: 12px 0 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--code-bg);
+    overflow: hidden;
+  }
+  .command code {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 12px;
+    font: 13.5px/1.5 var(--font-mono);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .copy {
+    flex: none;
+    border: 0;
+    border-left: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font: 600 13px var(--font-ui);
+    padding: 0 14px;
+    cursor: pointer;
+  }
+  .copy:hover { color: var(--text); }
+
+  ol { padding-left: 20px; margin: 0; }
+  ol li { margin-bottom: 8px; }
+  .note { color: var(--muted); font-size: 15px; }
+
+  footer {
+    margin-top: 64px;
+    padding-top: 20px;
+    padding-bottom: 40px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+<header>
+  <a href="https://digitalku.com" aria-label="Digitalku">
+    <img class="logo logo-light" src="digitalku-logo.svg" alt="Digitalku" width="196" height="44">
+    <img class="logo logo-dark" src="digitalku-logo-dark.svg" alt="" width="196" height="44">
+  </a>
+  <h1>Flatpak repository</h1>
+  <p class="lede">Linux applications from Digitalku, installed and kept up to date
+    through Flatpak, the same way as everything else in your software centre.</p>
+</header>
+
+<main>
+  <section aria-labelledby="apps">
+    <h2 id="apps">Applications</h2>
+
+    <article class="card app">
+      <img src="icons/com.digitalku.roost.svg" alt="" width="72" height="72">
+      <div>
+        <h3>Roost</h3>
+        <p class="summary">Organise, tag and find your visual assets. A local-first
+          digital asset manager.</p>
+        <div class="actions">
+          <a class="button" href="com.digitalku.roost.flatpakref">Install</a>
+          <a href="https://roost.digitalku.com">roost.digitalku.com</a>
+        </div>
+      </div>
+      <div class="wide">
+        <div class="command"><code>flatpak install https://flatpak.digitalku.com/com.digitalku.roost.flatpakref</code><button class="copy" type="button">Copy</button></div>
+      </div>
+    </article>
+  </section>
+
+  <section aria-labelledby="how">
+    <h2 id="how">How it works</h2>
+    <ol>
+      <li><strong>Install</strong> opens the application in GNOME Software, KDE
+        Discover or another software centre. The command beside it does the same
+        in a terminal.</li>
+      <li>The first install also adds this repository, named
+        <code>digitalku</code>, and Flathub, where the runtimes come from, if it is
+        not there already.</li>
+      <li>Updates then arrive with your other updates, or through
+        <code>flatpak update</code>.</li>
+    </ol>
+    <p class="note" style="margin-top:16px">Everything here is signed. The key comes with
+      the repository file, so Flatpak refuses anything it did not sign. The
+      applications themselves never contact this server: Flatpak checks for
+      updates, not the application.</p>
+  </section>
+
+  <section aria-labelledby="add">
+    <h2 id="add">Adding the repository alone</h2>
+    <p>To browse the applications in your software centre before installing one,
+      add the repository by itself:</p>
+    <div class="actions"><a class="button" href="digitalku.flatpakrepo">Add the repository</a></div>
+    <div class="command"><code>flatpak remote-add --if-not-exists digitalku https://flatpak.digitalku.com/digitalku.flatpakrepo</code><button class="copy" type="button">Copy</button></div>
+  </section>
+</main>
+
+<footer>
+  © Digitalku · <a href="https://digitalku.com">digitalku.com</a>
+</footer>
+
+<script>
+  for (const button of document.querySelectorAll(".copy")) {
+    button.addEventListener("click", async () => {
+      const text = button.previousElementSibling.textContent;
+      try {
+        await navigator.clipboard.writeText(text);
+        button.textContent = "Copied";
+      } catch {
+        button.textContent = "Select it";
+      }
+      setTimeout(() => { button.textContent = "Copy"; }, 1600);
+    });
+  }
+</script>
+</body>
+</html>

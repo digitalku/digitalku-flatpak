@@ -19,7 +19,7 @@ home. Runtimes still come from Flathub, through `RuntimeRepo=` in each
 | `apps/<app-id>.conf` | One file per published application: the fields of its `.flatpakref` |
 | `scripts/` | `init.sh`, `publish.sh`, `refs.sh`, `upload.sh`, `pull.sh`; `serve.sh` and `test-key.sh` for local tests; `lib.sh` is shared |
 | `keys/` | The public half of the signing key, once it exists, and how to make it ([keys/README.md](keys/README.md)) |
-| `site/` | Not yet: icons and a landing page, uploaded beside the repository |
+| `site/` | The landing page and the icons, uploaded to the bucket's root beside the repository |
 | `public/` | **Not in git.** What is served: `repo/` (OSTree, `archive-z2`), `digitalku.flatpakrepo`, one `<app-id>.flatpakref` per application |
 | `scratch/` | **Not in git.** Test keys, test installations |
 
@@ -182,15 +182,31 @@ What the prototype has shown so far:
   only the signing subkey signed a summary that verified against the public
   block.
 
-## 6. Not done yet
+## 6. The site
+
+`site/index.html` is the page at `https://flatpak.digitalku.com/`. It is one
+file with no external requests, in light and dark, and it lists each
+application with an **Install** link to its `.flatpakref` and the same as a
+command. **A new application is added to it by hand**, beside its
+`apps/<app-id>.conf`.
+
+| File | Used by |
+| --- | --- |
+| `digitalku.png` | `Icon=` in the `.flatpakrepo` (512×512, from digitalku.com's favicon) |
+| `favicon.ico` | The page; made from `digitalku.png` with ImageMagick |
+| `digitalku-logo.svg`, `digitalku-logo-dark.svg` | The page's header; the dark one is the same file with the navy `#05396b` turned to `#e6edf5` |
+| `icons/<app-id>.png` | `Icon=` in that application's `.flatpakref` (256×256) |
+| `icons/<app-id>.svg` | The page |
+
+Roost's icons are copies of `assets/brand/icon-256.png` and `roost-icon.svg`
+in the Roost repository. When the brand changes there, copy them again.
+
+## 7. Not done yet
 
 - The real signing key (owner; [keys/README.md](keys/README.md)).
   `GPG_KEY_ID` in `remote.conf` is empty until it exists.
 - The bucket, its custom domain, its Cache Rule and an API token (owner; §4).
   `R2_ENDPOINT` in `remote.conf` is empty until then.
-- `site/`: the icons the `.flatpakrepo` and `.flatpakref` point at
-  (`digitalku.svg`, `icons/com.digitalku.roost.png`), and a landing page at
-  the root.
 - A collection id. Without one, the remote cannot be used for peer-to-peer or
   USB installs. It can be added later, but every installed copy then has to be
   told about it.
