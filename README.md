@@ -108,16 +108,23 @@ onto a stale copy makes a commit whose parent is not the remote's latest.
 2. Bucket → Settings → Custom Domains → connect `flatpak.digitalku.com`. The
    `digitalku.com` zone must be on Cloudflare for this. Leave the `r2.dev`
    address off.
-3. Add a Cache Rule for `flatpak.digitalku.com`: paths starting with
-   `/repo/objects/`, `/repo/deltas/` or `/repo/delta-indexes/` are eligible
-   for cache, honouring the origin's `Cache-Control`. Without it, Cloudflare
-   does not cache extensionless or unfamiliar files at the edge. Everything
-   else is already `no-cache`.
-4. R2 → Manage API tokens → a token with **Object Read & Write** on that
+3. One Cache Rule for the whole host, `(http.host eq "flatpak.digitalku.com")`:
+   **Eligible for cache**, Edge TTL **use the cache-control header if present,
+   bypass if not**, Browser TTL **respect origin**. The headers `upload.sh`
+   sets then decide everything: the hashed files are cached for a year, the
+   `no-cache` ones are revalidated with R2 on every request, and the site
+   lives five minutes. Without the Browser TTL setting, the zone's own
+   default (six months on digitalku.com) replaced the site's five minutes,
+   which the first test upload found.
+4. A URL Rewrite Rule (Rules → Transform Rules), because R2 has no index
+   document: when `(http.host eq "flatpak.digitalku.com" and
+   http.request.uri.path eq "/")`, rewrite the path statically to
+   `/index.html`. Without it, `https://flatpak.digitalku.com/` is a 404.
+5. R2 → Manage API tokens → a token with **Object Read & Write** on that
    bucket only. Then `aws configure --profile digitalku-r2`, with the
    token's access key and secret and region `auto`. The secret stays in
    `~/.aws/credentials`.
-5. Set `R2_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com` in
+6. Set `R2_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com` in
    `remote.conf`.
 
 ### The first real publish

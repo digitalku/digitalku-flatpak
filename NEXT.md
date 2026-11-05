@@ -27,10 +27,11 @@ proven, but the size of a delta for a real code change has not been measured.
 The remote's name, address and branch are confirmed, and there is no
 collection id (README §2).
 
-1. **Owner: the bucket** (README §4, "Setting up the bucket"): the bucket,
-   the custom domain `flatpak.digitalku.com`, the Cache Rule, an API token,
-   and the `digitalku-r2` profile for the AWS CLI. Then set `R2_ENDPOINT` in
-   `remote.conf`.
+1. **Owner: two rules in the Cloudflare dashboard** (README §4, steps 3
+   and 4): the Cache Rule for the whole host with Browser TTL respecting the
+   origin, and the rewrite of `/` to `/index.html`. The bucket, its domain,
+   the token and the `digitalku-r2` profile are done, and `site/` is
+   already in the bucket.
 2. **The first real publish** (README §4, "The first real publish"), from a
    release build of Roost.
 3. **Roost's side.**
