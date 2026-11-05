@@ -209,8 +209,6 @@ in the Roost repository. When the brand changes there, copy them again.
 
 ## 7. Not done yet
 
-- The real signing key (owner; [keys/README.md](keys/README.md)).
-  `GPG_KEY_ID` in `remote.conf` is empty until it exists.
 - The bucket, its custom domain, its Cache Rule and an API token (owner; §4).
   `R2_ENDPOINT` in `remote.conf` is empty until then.
 - Roost's ADR-0063 §10 still says the Flatpak ships as a bundle on GitHub

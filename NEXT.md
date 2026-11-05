@@ -14,9 +14,10 @@ Last worked on 2026-11-05, in two sessions. Read this, then README.md.
 - `site/`: the landing page and the icons, checked in a browser at desktop
   and phone width, light and dark, and served from the emulated bucket with
   the right content types (README §6).
-- The key scheme, tried with throwaway keys: a keyring holding only the
-  signing subkey signs, and Flatpak verifies against the public block. The
-  steps for the real key are in `keys/README.md`.
+- The real signing key, made 2026-11-05: `61A0073CA3B4489283A0748371819AAD7FCB1E2F`
+  (`keys/README.md`). It signed a test repository from `~/.gnupg`, holding the
+  subkey alone, and Flatpak installed Roost from it after verifying against
+  `keys/digitalku.asc`, with nothing else trusted.
 
 Every commit published in the tests had the same tree. The update path is
 proven, but the size of a delta for a real code change has not been measured.
@@ -26,15 +27,13 @@ proven, but the size of a delta for a real code change has not been measured.
 The remote's name, address and branch are confirmed, and there is no
 collection id (README §2).
 
-1. **Owner: the real GPG key** (`keys/README.md`, "Making it"). Then commit
-   `keys/digitalku.asc` and `GPG_KEY_ID` in `remote.conf`.
-2. **Owner: the bucket** (README §4, "Setting up the bucket"): the bucket,
+1. **Owner: the bucket** (README §4, "Setting up the bucket"): the bucket,
    the custom domain `flatpak.digitalku.com`, the Cache Rule, an API token,
    and the `digitalku-r2` profile for the AWS CLI. Then set `R2_ENDPOINT` in
    `remote.conf`.
-3. **The first real publish** (README §4, "The first real publish"), from a
+2. **The first real publish** (README §4, "The first real publish"), from a
    release build of Roost.
-4. **Roost's side.**
+3. **Roost's side.**
    - Amend ADR-0063 §10, which still says a bundle on GitHub Releases.
    - Decide whether Roost's release build passes `--default-branch=stable`, or
      keeps building `master` and lets `publish.sh` rename it as it does now.

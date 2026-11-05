@@ -1,14 +1,31 @@
 # The signing key
 
-Not made yet. It is made **by the owner, by hand**, never by a script in this
-repository. The scheme was tried end to end with throwaway keys on 2026-11-05:
-a publishing keyring holding only the subkey (`sec#`) signed a summary, and
-Flatpak verified it against the exported public block.
+Made by the owner on 2026-11-05, by hand, with the steps below:
+
+```
+pub   ed25519 2026-11-05 [C]
+      61A0073CA3B4489283A0748371819AAD7FCB1E2F
+uid   Digitalku Flatpak <flatpak@digitalku.com>
+sub   ed25519 2026-11-05 [S]
+```
+
+No part of it expires. `digitalku.asc` here is its public block.
+
+| Where | Holds |
+| --- | --- |
+| `~/.gnupg` on the publishing machine | The signing subkey's secret alone (`sec#`, `ssb [S]`) |
+| `~/Documents/Keys/digitalku-gnupg.tar` | The whole keyring: primary, subkey, revocation certificate. Covered by the owner's regular disk backups |
+| The owner's password manager | The passphrase, which protects every copy of the secrets |
 
 ## The shape
 
-- **An Ed25519 primary key** that certifies and does nothing else. Made on, and
-  kept on, offline storage: a USB stick, plus a second offline copy.
+- **An Ed25519 primary key** that certifies and does nothing else, kept out of
+  the everyday keyring. It is **not** kept on a USB stick, and that was a
+  choice. Flatpak pins the key block a user received, so a subkey minted with
+  a stolen primary is one no installed copy accepts. The primary can only
+  revoke or replace the subkey, which makes losing it the real risk, more than
+  having it stolen, and a file in a backed-up folder is lost less easily than
+  a stick in a drawer.
 - **An Ed25519 signing subkey with no expiry.** Its secret half is the only
   secret on the machine that publishes, exported with
   `--export-secret-subkeys`, so the primary's secret is never there.
@@ -29,13 +46,14 @@ behind it, and it is why the secret lives on one machine only.
 
 ## Making it
 
-The keyring is made **in memory** (`/dev/shm`), copied to the USB sticks, and
-then wiped, so the primary's secret never touches the internal disk. A
-keyring kept directly on a FAT or exFAT stick also works badly: GnuPG wants
-Unix permissions there, and that filesystem has none.
+The keyring is made **in memory** (`/dev/shm`), packed into one tar, and then
+wiped, so the only copies are the tar and the subkey in `~/.gnupg`.
 
-GnuPG asks for a passphrase in a pinentry window. Choose a long one, and keep
-a written copy with the sticks: without it, the primary on them is useless.
+GnuPG asks for a passphrase in a pinentry window. Choose a long one and keep it
+in a password manager: without it, every copy of the key is useless.
+
+Run all three parts in **one terminal**. Parts 2 to 6 depend on `GNUPGHOME`
+and `FPR` from part 1, and a fresh terminal has neither.
 
 ```sh
 # 1. A keyring in memory.
@@ -52,11 +70,12 @@ gpg --armor --export "$FPR" > ~/Documents/Projects/software/digitalku-flatpak/ke
 # 4. The signing subkey alone, into the everyday keyring of the publishing machine.
 gpg --armor --export-secret-subkeys "$FPR" | gpg --homedir ~/.gnupg --import
 
-# 5. The whole keyring, primary and revocation certificate included, onto each
-#    stick. Stop its agent first so nothing is half-written.
+# 5. The whole keyring, primary and revocation certificate included, into a
+#    backed-up folder. Stop its agent first so nothing is half-written.
 gpgconf --kill gpg-agent
-tar -C "$GNUPGHOME" -cf /run/media/$USER/<STICK>/digitalku-gnupg.tar .
-#    (again for the second stick)
+mkdir -p ~/Documents/Keys
+tar -C "$GNUPGHOME" -cf ~/Documents/Keys/digitalku-gnupg.tar .
+chmod 600 ~/Documents/Keys/digitalku-gnupg.tar
 
 # 6. Check, then wipe the copy in memory.
 gpg --homedir ~/.gnupg --list-secret-keys "$FPR"   # must show `sec#` and `ssb ... [S]`
@@ -65,8 +84,9 @@ echo "$FPR"
 ```
 
 The revocation certificate GnuPG wrote is
-`openpgp-revocs.d/<FPR>.rev` inside the tar. A printed copy, kept apart from
-the sticks, means a lost passphrase can still revoke the key.
+`openpgp-revocs.d/<FPR>.rev` inside the tar. It revokes the key without the
+passphrase, so a printed copy kept elsewhere still works when the passphrase
+is lost.
 
 Then set `GPG_KEY_ID=<FPR>` in `remote.conf` and commit it together with
 `keys/digitalku.asc`.
@@ -79,12 +99,12 @@ subkey and the revocation certificate.
 
 ## Using the primary later
 
-Only to revoke the subkey or make a new one. Unpack a stick's tar into memory,
+Only to revoke the subkey or make a new one. Unpack the tar into memory,
 work there, and wipe it again:
 
 ```sh
 export GNUPGHOME=$(mktemp -d /dev/shm/digitalku-gnupg.XXXXXX)
-tar -C "$GNUPGHOME" -xf /run/media/$USER/<STICK>/digitalku-gnupg.tar
+tar -C "$GNUPGHOME" -xf ~/Documents/Keys/digitalku-gnupg.tar
 # ...
 gpgconf --kill gpg-agent; rm -rf "$GNUPGHOME"; unset GNUPGHOME
 ```
