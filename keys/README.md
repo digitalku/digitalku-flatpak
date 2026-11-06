@@ -65,7 +65,7 @@ FPR=$(gpg --list-keys --with-colons | awk -F: '$1 == "fpr" { print $10; exit }')
 gpg --quick-add-key "$FPR" ed25519 sign never
 
 # 3. The public block, into this repository.
-gpg --armor --export "$FPR" > ~/Documents/Projects/software/digitalku-flatpak/keys/digitalku.asc
+gpg --armor --export "$FPR" > ~/Projects/software/digitalku-flatpak/keys/digitalku.asc
 
 # 4. The signing subkey alone, into the everyday keyring of the publishing machine.
 gpg --armor --export-secret-subkeys "$FPR" | gpg --homedir ~/.gnupg --import
