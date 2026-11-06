@@ -33,8 +33,14 @@ RELEASING.md.
   `immutable` for a year and a second `GET` is a `HIT`; the summary and refs
   are `no-cache`.
 
-Every commit published in the tests had the same tree, so the size of a delta
-for a real code change is still unmeasured. Roost 0.3.0 will be the first.
+- **The second release**, 2026-11-06: Roost 0.2.1 (`v0.2.1`, pushed), a fix
+  for thumbnails after an import, built by `build-release.sh` and published
+  as stable `ab913f0673c5c036cc7ed904c7b220c6fd1d1a833a8b3d7069f878757b109494`
+  (app commit `cec372fe…`) with 93 files uploaded. `remote-info` against the
+  live remote says 0.2.1. **The first delta for a real code change is 68,245
+  bytes** (`deltas/3f/…-q5/…`, 0.2.0 to 0.2.1) against a 149.9 MB full
+  download: the change was a few compiled files and eleven version numbers.
+  What Discover shows for it is still to be noted.
 
 The owner's own Roost moved to this remote the same day, in the system
 installation.
@@ -58,8 +64,8 @@ collection id (README §2).
      keeps building `master` and lets `publish.sh` rename it as it does now.
    - Replace the install instructions on roost.digitalku.com and in Roost's
      README.
-2. **The next release**: build it, `publish.sh`, `upload.sh`, and measure the
-   delta an installed 0.2.0 pulls.
+2. **Note what Discover downloads** for the owner's update from 0.2.0 to
+   0.2.1, beside the 68 KB the delta weighs in the repository.
 
 ## Leftovers safe to delete
 
