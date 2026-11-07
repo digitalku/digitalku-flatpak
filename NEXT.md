@@ -1,6 +1,6 @@
 # Where this stands
 
-Last worked on 2026-11-06. Read this, then README.md. A release follows
+Last worked on 2026-11-07. Read this, then README.md. A release follows
 RELEASING.md.
 
 ## Done
@@ -41,6 +41,15 @@ RELEASING.md.
   bytes** (`deltas/3f/…-q5/…`, 0.2.0 to 0.2.1) against a 149.9 MB full
   download: the change was a few compiled files and eleven version numbers.
   What Discover shows for it is still to be noted.
+
+- **The third release**, 2026-11-07: Roost 0.2.2 (`v0.2.2`, pushed), a fix
+  for the grid's scroll after a preview, published as stable
+  `c7b8799b92f35a97ad74e2eac1ef807f138dc0ac515be298aefdcb05baf42f57` (app
+  commit `c98380af…`) with 87 files uploaded. A fresh installation reads 0.2.2
+  from the live remote once its appstream is fetched; this machine's system
+  `remote-info` said 0.2.1 beside the new commit until then, which is the
+  appstream cache and not the remote. The delta from 0.2.1 is **155,445
+  bytes** (`deltas/q5/…-x7/…`): the renderer bundle and eleven version numbers.
 
 The owner's own Roost moved to this remote the same day, in the system
 installation.
