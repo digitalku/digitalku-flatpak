@@ -51,6 +51,15 @@ RELEASING.md.
   appstream cache and not the remote. The delta from 0.2.1 is **155,445
   bytes** (`deltas/q5/…-x7/…`): the renderer bundle and eleven version numbers.
 
+- **The fourth release**, 2026-11-08: Roost 0.2.3 (`v0.2.3`, pushed), which
+  gives the sandbox `--socket=pulseaudio`: every earlier release played video
+  without sound, its audio service crashing in `libpulse` by way of ALSA.
+  Published as stable
+  `f262ee200ea69fb5df57acc80943f1fd98a2597ff8b85469a08740333b9b8cf3` (app
+  commit `1605d3dc…`). A fresh installation reads 0.2.3 from the live remote,
+  with `pulseaudio` in its sockets. The delta from 0.2.2 is **14,313 bytes**
+  (`deltas/x7/…-8m/…`): the metadata and eleven version numbers.
+
 The owner's own Roost moved to this remote the same day, in the system
 installation.
 
