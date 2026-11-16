@@ -60,6 +60,19 @@ RELEASING.md.
   with `pulseaudio` in its sockets. The delta from 0.2.2 is **14,313 bytes**
   (`deltas/x7/…-8m/…`): the metadata and eleven version numbers.
 
+- **The fifth release**, 2026-11-17: Roost 0.2.4 (`v0.2.4`, pushed): a view
+  for each kind of place, and a dark title bar (`GTK_THEME=Adwaita:dark` in
+  the launcher, because the sandbox lacks the desktop's theme). The first
+  release from Ubuntu 26.04: `org.flatpak.Builder`, the 26.08 SDK, its node22
+  extension and the Electron BaseApp were installed again, the signing subkey
+  imported from `~/Documents/Keys/digitalku-gnupg.tar`, and `awscli` from
+  apt. Published as stable
+  `2af2678af9be16a858cce350b64b74670171c66ebcbbe4845f3586d39c26fd7d` (app
+  commit `68b49311…`), 150 files uploaded. A fresh installation reads 0.2.4
+  from the live remote once its appstream is fetched. The delta from 0.2.3 is
+  **231,509 bytes** (`deltas/8m/…-Kv/…`), larger than the last because
+  libvips was built anew rather than taken from the state cache.
+
 The owner's own Roost moved to this remote the same day, in the system
 installation.
 
