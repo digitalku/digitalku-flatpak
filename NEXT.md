@@ -73,7 +73,7 @@ RELEASING.md.
   **231,509 bytes** (`deltas/8m/…-Kv/…`), larger than the last because
   libvips was built anew rather than taken from the state cache.
 
-- **The sixth release**, 2026-11-22: Roost 0.2.5 (`v0.2.5`, not pushed yet):
+- **The sixth release**, 2026-11-22: Roost 0.2.5 (`v0.2.5`, pushed):
   `Delete` inside a folder keeps a file that is in another folder too, a
   folder's delete spares such files, and a *No folder* place. Built with the
   state cache, tried in an isolated installation (0.2.5, no network, the CLI
