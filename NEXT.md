@@ -91,6 +91,14 @@ RELEASING.md.
   commit `81b2c324…`), 109 files in the dry run. A fresh installation installed
   0.2.6 from the live remote. The delta from 0.2.5 is **36,809 bytes**.
 
+- **The eighth release**, 2026-11-23: Roost 0.2.7 (`v0.2.7`, pushed): a lock
+  an older build left, holding a pid alone, is taken over when the live process
+  behind that pid started after the file was written. 0.2.6 still refused the
+  owner's library over such a file. Tried in an isolated installation, published
+  as stable `0613603ce99496310b35134d2c3ff1605aa0c9b598300674d67b75d70d1c6c71` (app commit `7b80af9b…`), 88 files in the dry run. A fresh
+  installation installed 0.2.7 from the live remote. The delta from 0.2.6 is
+  **17,493 bytes**.
+
 The owner's own Roost moved to this remote the same day, in the system
 installation.
 
