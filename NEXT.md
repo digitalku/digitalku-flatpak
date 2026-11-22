@@ -82,6 +82,15 @@ RELEASING.md.
   commit `28961a24…`). A fresh installation installed 0.2.5 from the live
   remote. The delta from 0.2.4 is **262,893 bytes** (`deltas/Kv/…-kP/…`).
 
+- **The seventh release**, 2026-11-23: Roost 0.2.6 (`v0.2.6`, pushed): dragging
+  files out works on GNOME (Electron's file-transfer portal switched on), a closed
+  Roost no longer leaves its library locked (main waits for the engine, and the
+  lock records its process's start time), and only the latest staged copies are
+  kept. Tried in an isolated installation (0.2.6, same permissions), published as
+  stable `1b1a080f18338b854b6db43c22ee14b6343b9913ef8d8be36bd56bf81f87e013` (app
+  commit `81b2c324…`), 109 files in the dry run. A fresh installation installed
+  0.2.6 from the live remote. The delta from 0.2.5 is **36,809 bytes**.
+
 The owner's own Roost moved to this remote the same day, in the system
 installation.
 
