@@ -99,6 +99,19 @@ RELEASING.md.
   installation installed 0.2.7 from the live remote. The delta from 0.2.6 is
   **17,493 bytes**.
 
+- **The ninth release**, 2026-11-23: Roost 0.2.8 (`v0.2.8`, pushed): Markdown
+  and plain text shown and edited in the window (CodeMirror 6, saved on leaving),
+  a thumbnail of a text file's first lines in a bundled Noto Sans Mono, and Add's
+  New file, import and paste landing in the folder on screen. The first release
+  with new npm packages since the remote began: 32 entries were added to Roost's
+  `generated-sources.json` from its lockfile by hand, `flatpak-node-generator`
+  not being installed on Ubuntu, and the offline build took them. Tried in an
+  isolated installation (the sandboxed CLI drew a `.md` and a `.txt`), published
+  as stable `0c13ad003d64705e6049eeaf1c0788da8276208d361f9f1530aa2af95902ed57`
+  (app commit `77b26a43…`), 798 files in the dry run. A fresh installation
+  installed 0.2.8 from the live remote. The delta from 0.2.7 is
+  **1,201,203 bytes**: the renderer bundle, CodeMirror in it.
+
 The owner's own Roost moved to this remote the same day, in the system
 installation.
 
