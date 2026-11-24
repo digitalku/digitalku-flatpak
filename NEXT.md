@@ -122,6 +122,16 @@ RELEASING.md.
   installation reads 0.2.9 from the live remote. The delta from 0.2.8 is
   **24,991 bytes**.
 
+- **The eleventh release**, 2026-11-25: Roost 0.2.10 (`v0.2.10`, pushed): *Copy
+  this frame* in the menu over a video open in the preview, the frame drawn from
+  the `<video>` by the window and put on the clipboard as a PNG. No new packages.
+  Tried in an isolated installation (0.2.10, the row in the renderer bundle),
+  published as stable
+  `978081699c88655b727ee1d16eaabdd03bf76c4cd11aa4ade06cb65c84fa1c79`
+  (app commit `c0cd3392…`), 100 files in the dry run, nothing deleted. A fresh
+  installation reads 0.2.10 from the live remote. The delta from 0.2.9 is
+  **32,715 bytes**.
+
 The owner's own Roost moved to this remote the same day, in the system
 installation.
 
