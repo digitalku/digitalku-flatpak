@@ -112,6 +112,16 @@ RELEASING.md.
   installed 0.2.8 from the live remote. The delta from 0.2.7 is
   **1,201,203 bytes**: the renderer bundle, CodeMirror in it.
 
+- **The tenth release**, 2026-11-25: Roost 0.2.9 (`v0.2.9`, pushed): a file
+  saved by another application shows its new contents in the preview and the
+  inspector without a restart, its `roost://file/` address now carrying the
+  content hash. No new packages. Tried in an isolated installation (0.2.9, the
+  new address in the renderer bundle), published as stable
+  `a9016bee938201aeb4666df495a29172599345c00c1654e7b4e5d4c1530e1276`
+  (app commit `d85b9b6e…`), 101 files in the dry run, nothing deleted. A fresh
+  installation reads 0.2.9 from the live remote. The delta from 0.2.8 is
+  **24,991 bytes**.
+
 The owner's own Roost moved to this remote the same day, in the system
 installation.
 
