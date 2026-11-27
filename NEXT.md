@@ -132,7 +132,7 @@ RELEASING.md.
   installation reads 0.2.10 from the live remote. The delta from 0.2.9 is
   **32,715 bytes**.
 
-- **The twelfth release**, 2026-11-27: Roost 0.3.0 (`v0.3.0`, not pushed yet): a
+- **The twelfth release**, 2026-11-27: Roost 0.3.0 (`v0.3.0`, pushed): a
   password on a library, which makes it format version 3 so that 0.2 and older
   refuse it, and *Share on this network…*, which this Flatpak cannot use yet
   (no `--share=network`) and says so. No new npm packages; the new workspace
