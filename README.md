@@ -132,7 +132,7 @@ onto a stale copy makes a commit whose parent is not the remote's latest.
    mistake, and the dashboard's list then says *Rewrite query to*. Without
    the rule, `https://flatpak.digitalku.com/` is a 404.
 5. R2 → Manage API tokens → a token with **Object Read & Write** on that
-   bucket only. Then `aws configure --profile digitalku-r2`, with the
+   bucket only. Then `aws configure --profile digitalku-flatpak-r2`, with the
    token's access key and secret and region `auto`. The secret stays in
    `~/.aws/credentials`.
 6. Set `R2_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com` in

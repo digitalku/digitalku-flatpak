@@ -20,7 +20,8 @@ RELEASING.md.
   subkey alone, and Flatpak installed Roost from it after verifying against
   `keys/digitalku.asc`, with nothing else trusted.
 - Cloudflare, done by the owner on 2026-11-05: the bucket `digitalku-flatpak`
-  on `flatpak.digitalku.com`, the `digitalku-r2` profile, `site/` uploaded,
+  on `flatpak.digitalku.com`, the `digitalku-r2` profile (renamed
+  `digitalku-flatpak-r2` on 2026-11-07), `site/` uploaded,
   the Cache Rule *Flatpak respect origin* (a second `GET` is a `HIT`, the
   site carries `max-age=300`) and the URL Rewrite *flatpak index*
   (`/` answers 200).
