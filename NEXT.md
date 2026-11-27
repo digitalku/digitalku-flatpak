@@ -132,6 +132,17 @@ RELEASING.md.
   installation reads 0.2.10 from the live remote. The delta from 0.2.9 is
   **32,715 bytes**.
 
+- **The twelfth release**, 2026-11-27: Roost 0.3.0 (`v0.3.0`, not pushed yet): a
+  password on a library, which makes it format version 3 so that 0.2 and older
+  refuse it, and *Share on this network…*, which this Flatpak cannot use yet
+  (no `--share=network`) and says so. No new npm packages; the new workspace
+  package `@roost/server` came across with the tree. Tried in an isolated
+  installation (0.3.0, the server's `dist/` present, the window up), published as
+  stable `d1fdd1c3f826f841e4e5af515ac667a695a1d18cfa7801f164b551a7a746bc6f`
+  (app commit `d80601a3…`), 219 objects in the dry run, nothing deleted. A fresh
+  installation reads 0.3.0 from the live remote, signature verified. The delta
+  from 0.2.10 is **153,891 bytes**.
+
 The owner's own Roost moved to this remote the same day, in the system
 installation.
 
